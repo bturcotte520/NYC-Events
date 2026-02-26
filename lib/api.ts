@@ -1,7 +1,5 @@
 import { NYCEvents, shouldExcludeEvent } from "./types";
 
-const API_BASE_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json";
-
 export interface FetchEventsParams {
   startDate?: Date;
   endDate?: Date;
@@ -12,49 +10,23 @@ export interface FetchEventsParams {
 export async function fetchEvents(params: FetchEventsParams = {}): Promise<NYCEvents[]> {
   const queryParams = new URLSearchParams();
   
-  queryParams.append("$limit", "5000");
-  
   if (params.startDate) {
-    queryParams.append(
-      "$where",
-      `start_date_time >= '${params.startDate.toISOString()}'`
-    );
+    queryParams.append("startDate", params.startDate.toISOString());
   }
   
-  if (params.endDate && !params.startDate) {
-    queryParams.append(
-      "$where",
-      `end_date_time <= '${params.endDate.toISOString()}'`
-    );
-  }
-  
-  if (params.startDate && params.endDate) {
-    const existingWhere = queryParams.get("$where") || "";
-    queryParams.set(
-      "$where",
-      `start_date_time >= '${params.startDate.toISOString()}' AND start_date_time <= '${params.endDate.toISOString()}'`
-    );
+  if (params.endDate) {
+    queryParams.append("endDate", params.endDate.toISOString());
   }
   
   if (params.borough) {
-    const existingWhere = queryParams.get("$where") || "";
-    if (existingWhere) {
-      queryParams.set("$where", `${existingWhere} AND event_borough='${params.borough}'`);
-    } else {
-      queryParams.append("$where", `event_borough='${params.borough}'`);
-    }
+    queryParams.append("borough", params.borough);
   }
   
   if (params.eventType) {
-    const existingWhere = queryParams.get("$where") || "";
-    if (existingWhere) {
-      queryParams.set("$where", `${existingWhere} AND event_type='${params.eventType}'`);
-    } else {
-      queryParams.append("$where", `event_type='${params.eventType}'`);
-    }
+    queryParams.append("eventType", params.eventType);
   }
   
-  const url = `${API_BASE_URL}?${queryParams.toString()}`;
+  const url = `/api/events?${queryParams.toString()}`;
   
   const response = await fetch(url, {
     headers: {
@@ -63,12 +35,12 @@ export async function fetchEvents(params: FetchEventsParams = {}): Promise<NYCEv
   });
   
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    const error = await response.json().catch(() => ({ error: "Unknown error" }));
+    throw new Error(error.error || `HTTP error! status: ${response.status}`);
   }
   
   const data: NYCEvents[] = await response.json();
-  
-  return data.filter(event => !shouldExcludeEvent(event));
+  return data;
 }
 
 export function groupEventsByDate(events: NYCEvents[]): Map<string, NYCEvents[]> {
