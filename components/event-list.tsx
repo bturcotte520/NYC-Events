@@ -72,15 +72,24 @@ export function EventList({ events, selectedDate, isLoading }: EventListProps) {
 }
 
 function EventCard({ event }: { event: NYCEvents }) {
-  const startDate = event.start_date_time 
-    ? parseISO(event.start_date_time) 
+  const startDate = event.start_date_time
+    ? parseISO(event.start_date_time)
     : null;
-  const endDate = event.end_date_time 
-    ? parseISO(event.end_date_time) 
+  const endDate = event.end_date_time
+    ? parseISO(event.end_date_time)
     : null;
 
+  const handleClick = () => {
+    const dateStr = startDate ? format(startDate, "MMMM d, yyyy") : "";
+    const searchQuery = encodeURIComponent(`${event.event_name} ${dateStr} NYC`);
+    window.open(`https://www.google.com/search?q=${searchQuery}`, "_blank");
+  };
+
   return (
-    <Card className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-200 group">
+    <Card
+      onClick={handleClick}
+      className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-200 group cursor-pointer"
+    >
       <CardHeader className="p-4 pb-2">
         <div className="flex items-start justify-between gap-3">
           <h4 className="font-semibold text-slate-100 text-sm leading-tight group-hover:text-indigo-400 transition-colors">
