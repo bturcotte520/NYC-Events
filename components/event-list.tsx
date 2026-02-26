@@ -60,13 +60,15 @@ export function EventList({ events, selectedDate, isLoading }: EventListProps) {
         </p>
       </div>
 
-      <ScrollArea className="flex-1">
-        <div className="p-4 space-y-3">
-          {events.map((event) => (
-            <EventCard key={event.event_id} event={event} />
-          ))}
-        </div>
-      </ScrollArea>
+      <div className="flex-1 overflow-hidden relative">
+        <ScrollArea className="h-full w-full">
+          <div className="p-4 space-y-3">
+            {events.map((event) => (
+              <EventCard key={event.event_id} event={event} />
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 }
@@ -90,7 +92,7 @@ function EventCard({ event }: { event: NYCEvents }) {
       onClick={handleClick}
       className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-200 group cursor-pointer"
     >
-      <CardHeader className="p-4 pb-1">
+      <CardHeader className="p-4 pb-0">
         <div className="flex items-start justify-between gap-3">
           <h4 className="font-semibold text-slate-100 text-sm leading-tight group-hover:text-indigo-400 transition-colors">
             {event.event_name}
@@ -106,7 +108,7 @@ function EventCard({ event }: { event: NYCEvents }) {
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 pt-1 space-y-1.5">
+      <CardContent className="p-4 pt-0.5 space-y-1">
         <div className="flex items-center gap-2 text-slate-400 text-xs">
           <Clock className="h-3.5 w-3.5 shrink-0" />
           <span>
