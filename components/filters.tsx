@@ -46,15 +46,15 @@ export function Filters({
         
         <div className="flex-1 flex flex-col sm:flex-row gap-3">
           <Select
-            value={selectedBorough || ""}
-            onValueChange={(value) => onBoroughChange(value || null)}
+            value={selectedBorough || "all"}
+            onValueChange={(value) => onBoroughChange(value === "all" ? null : value)}
           >
             <SelectTrigger className="w-full sm:w-[180px] bg-slate-800/50 border-slate-700 text-slate-200">
               <MapPin className="h-4 w-4 mr-2 text-slate-400" />
               <SelectValue placeholder="All Boroughs" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-700">
-              <SelectItem value="" className="text-slate-200 focus:bg-slate-700 focus:text-slate-100">
+              <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-slate-100">
                 All Boroughs
               </SelectItem>
               {boroughs.map((borough) => (
@@ -70,15 +70,15 @@ export function Filters({
           </Select>
 
           <Select
-            value={selectedEventType || ""}
-            onValueChange={(value) => onEventTypeChange(value || null)}
+            value={selectedEventType || "all"}
+            onValueChange={(value) => onEventTypeChange(value === "all" ? null : value)}
           >
             <SelectTrigger className="w-full sm:w-[200px] bg-slate-800/50 border-slate-700 text-slate-200">
               <Tags className="h-4 w-4 mr-2 text-slate-400" />
               <SelectValue placeholder="All Event Types" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-700 max-h-[300px]">
-              <SelectItem value="" className="text-slate-200 focus:bg-slate-700 focus:text-slate-100">
+              <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-slate-100">
                 All Event Types
               </SelectItem>
               {eventTypes.map((type) => (
