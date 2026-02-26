@@ -3,32 +3,17 @@ import { NYCEvents, shouldExcludeEvent } from "@/lib/types";
 
 const API_BASE_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json";
 
-function formatDateForSocrata(date: Date): string {
-  return date.toISOString().replace('T', ' ').replace('Z', '').split('.')[0];
-}
-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   
-  const startDate = searchParams.get("startDate");
-  const endDate = searchParams.get("endDate");
   const borough = searchParams.get("borough");
   const eventType = searchParams.get("eventType");
   
   const queryParams = new URLSearchParams();
   queryParams.append("$limit", "5000");
+  queryParams.append("$order", "start_date_time DESC");
   
   const whereConditions: string[] = [];
-  
-  if (startDate) {
-    const start = new Date(startDate);
-    whereConditions.push(`start_date_time >= '${formatDateForSocrata(start)}'`);
-  }
-  
-  if (endDate) {
-    const end = new Date(endDate);
-    whereConditions.push(`start_date_time <= '${formatDateForSocrata(end)}'`);
-  }
   
   if (borough) {
     whereConditions.push(`event_borough='${borough}'`);

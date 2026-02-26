@@ -10,14 +10,6 @@ export interface FetchEventsParams {
 export async function fetchEvents(params: FetchEventsParams = {}): Promise<NYCEvents[]> {
   const queryParams = new URLSearchParams();
   
-  if (params.startDate) {
-    queryParams.append("startDate", params.startDate.toISOString());
-  }
-  
-  if (params.endDate) {
-    queryParams.append("endDate", params.endDate.toISOString());
-  }
-  
   if (params.borough) {
     queryParams.append("borough", params.borough);
   }
