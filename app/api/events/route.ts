@@ -3,6 +3,10 @@ import { NYCEvents, shouldExcludeEvent } from "@/lib/types";
 
 const API_BASE_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json";
 
+function formatDateForSocrata(date: Date): string {
+  return date.toISOString().replace('T', ' ').replace('Z', '').split('.')[0];
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   
@@ -14,30 +18,28 @@ export async function GET(request: NextRequest) {
   const queryParams = new URLSearchParams();
   queryParams.append("$limit", "5000");
   
-  let whereClause = "";
+  const whereConditions: string[] = [];
   
-  if (startDate && endDate) {
-    whereClause = `start_date_time >= '${startDate}' AND start_date_time <= '${endDate}'`;
-  } else if (startDate) {
-    whereClause = `start_date_time >= '${startDate}'`;
-  } else if (endDate) {
-    whereClause = `end_date_time <= '${endDate}'`;
+  if (startDate) {
+    const start = new Date(startDate);
+    whereConditions.push(`start_date_time >= '${formatDateForSocrata(start)}'`);
+  }
+  
+  if (endDate) {
+    const end = new Date(endDate);
+    whereConditions.push(`start_date_time <= '${formatDateForSocrata(end)}'`);
   }
   
   if (borough) {
-    whereClause = whereClause 
-      ? `${whereClause} AND event_borough='${borough}'`
-      : `event_borough='${borough}'`;
+    whereConditions.push(`event_borough='${borough}'`);
   }
   
   if (eventType) {
-    whereClause = whereClause
-      ? `${whereClause} AND event_type='${eventType}'`
-      : `event_type='${eventType}'`;
+    whereConditions.push(`event_type='${eventType}'`);
   }
   
-  if (whereClause) {
-    queryParams.append("$where", whereClause);
+  if (whereConditions.length > 0) {
+    queryParams.append("$where", whereConditions.join(" AND "));
   }
   
   const url = `${API_BASE_URL}?${queryParams.toString()}`;
@@ -50,8 +52,10 @@ export async function GET(request: NextRequest) {
     });
     
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("NYC API error:", errorText);
       return NextResponse.json(
-        { error: `HTTP error! status: ${response.status}` },
+        { error: `API error: ${response.status}` },
         { status: response.status }
       );
     }
@@ -61,6 +65,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json(filtered);
   } catch (error) {
+    console.error("Fetch error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to fetch events" },
       { status: 500 }
