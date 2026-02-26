@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
   
   const queryParams = new URLSearchParams();
   queryParams.append("$limit", "5000");
-  queryParams.append("$order", "start_date_time DESC");
   
   const whereConditions: string[] = [];
   
@@ -28,6 +27,8 @@ export async function GET(request: NextRequest) {
   }
   
   const url = `${API_BASE_URL}?${queryParams.toString()}`;
+  
+  console.log("Fetching from NYC API:", url);
   
   try {
     const response = await fetch(url, {
@@ -46,7 +47,15 @@ export async function GET(request: NextRequest) {
     }
     
     const data: NYCEvents[] = await response.json();
+    console.log(`Got ${data.length} events from API`);
+    
+    if (data.length > 0) {
+      const dates = data.map(e => e.start_date_time).filter(Boolean).sort();
+      console.log("Date range:", dates[0], "to", dates[dates.length - 1]);
+    }
+    
     const filtered = data.filter(event => !shouldExcludeEvent(event));
+    console.log(`After filtering: ${filtered.length} events`);
     
     return NextResponse.json(filtered);
   } catch (error) {

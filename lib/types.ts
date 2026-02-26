@@ -32,47 +32,63 @@ export const EXCLUDED_EVENT_TYPES = [
   "Sport - Youth",
   "Sport - Adult",
   "Theater Load in and Load Outs",
+  "Miscellaneous",
+  "Outdoor Learning",
+  "RIPA Special Event",
+  "Kids Sports After-School",
 ];
 
 export const EXCLUDED_EVENT_NAME_PATTERNS = [
   "Lawn Closure",
+  "Closure",
   "Picnic House",
+  "Miscellaneous",
+  "construction",
+  "Maintenance",
+  "aftercare",
+  "No Amplified Sound",
+  "Model Helicopter",
+  "Model Aircraft",
+  "Radio Control Model",
+  "Helen Marshall Playground",
+  "Dana Discovery Center Lawn",
+  "East Green",
 ];
 
 export function getEventTypeColor(eventType: string): string {
   if (!eventType) return EVENT_TYPE_COLORS["Default"];
-  
-  const normalizedType = Object.keys(EVENT_TYPE_COLORS).find(key => 
+
+  const normalizedType = Object.keys(EVENT_TYPE_COLORS).find(key =>
     eventType.toLowerCase().includes(key.toLowerCase())
   );
-  
+
   return normalizedType ? EVENT_TYPE_COLORS[normalizedType] : EVENT_TYPE_COLORS["Default"];
 }
 
 export function getBoroughGradient(borough: string): string {
   if (!borough) return "from-slate-500 to-slate-600";
-  
-  const normalizedBorough = Object.keys(BOROUGH_COLORS).find(key => 
+
+  const normalizedBorough = Object.keys(BOROUGH_COLORS).find(key =>
     borough.toLowerCase().includes(key.toLowerCase())
   );
-  
+
   return normalizedBorough ? BOROUGH_COLORS[normalizedBorough] : "from-slate-500 to-slate-600";
 }
 
 export function shouldExcludeEvent(event: NYCEvents): boolean {
   if (!event) return true;
-  
-  if (EXCLUDED_EVENT_TYPES.some(type => 
+
+  if (EXCLUDED_EVENT_TYPES.some(type =>
     event.event_type?.toLowerCase().includes(type.toLowerCase())
   )) {
     return true;
   }
-  
-  if (EXCLUDED_EVENT_NAME_PATTERNS.some(pattern => 
+
+  if (EXCLUDED_EVENT_NAME_PATTERNS.some(pattern =>
     event.event_name?.toLowerCase().includes(pattern.toLowerCase())
   )) {
     return true;
   }
-  
+
   return false;
 }
