@@ -148,9 +148,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-        <header className="mb-6 md:mb-8">
+    <div className="h-screen bg-slate-950 flex flex-col">
+      <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 py-4 md:py-6 overflow-hidden">
+        <header className="mb-4 md:mb-6 shrink-0">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg">
               <CalendarDays className="h-6 w-6 text-white" />
@@ -164,7 +164,7 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="mb-6">
+        <div className="mb-4 shrink-0">
           {isLoading ? (
             <div className="space-y-4">
               <div className="flex gap-3">
@@ -188,8 +188,8 @@ export default function Home() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div>
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
+          <div className="flex flex-col min-h-0">
             <Calendar
               events={eventsByDate}
               selectedDate={selectedDate}
@@ -198,8 +198,8 @@ export default function Home() {
               onMonthChange={setCurrentMonth}
             />
           </div>
-          
-          <div>
+
+          <div className="flex flex-col min-h-0">
             <EventList
               events={selectedDateEvents}
               selectedDate={selectedDate}

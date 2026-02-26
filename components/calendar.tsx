@@ -56,7 +56,7 @@ export function Calendar({
   };
 
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 md:p-6">
+    <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 md:p-6 flex-1 flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Button

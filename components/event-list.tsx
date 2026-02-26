@@ -16,8 +16,8 @@ interface EventListProps {
 export function EventList({ events, selectedDate, isLoading }: EventListProps) {
   if (isLoading) {
     return (
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-        <div className="flex items-center justify-center h-64">
+      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 flex-1 flex flex-col">
+        <div className="flex items-center justify-center flex-1">
           <div className="flex flex-col items-center gap-4">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
             <p className="text-slate-400 text-sm">Loading events...</p>
@@ -29,14 +29,14 @@ export function EventList({ events, selectedDate, isLoading }: EventListProps) {
 
   if (events.length === 0) {
     return (
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-        <div className="flex flex-col items-center justify-center h-64 text-center">
+      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 flex-1 flex flex-col">
+        <div className="flex flex-col items-center justify-center flex-1 text-center">
           <Calendar className="h-12 w-12 text-slate-600 mb-4" />
           <h3 className="text-lg font-medium text-slate-300 mb-2">
             No events found
           </h3>
           <p className="text-slate-500 text-sm max-w-xs">
-            {selectedDate 
+            {selectedDate
               ? `No events scheduled for ${format(selectedDate, "MMMM d, yyyy")}.`
               : "Select a date to view events."
             }
@@ -47,10 +47,10 @@ export function EventList({ events, selectedDate, isLoading }: EventListProps) {
   }
 
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
-      <div className="p-4 border-b border-slate-800">
+    <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden flex-1 flex flex-col">
+      <div className="p-4 border-b border-slate-800 shrink-0">
         <h3 className="text-lg font-semibold text-slate-100">
-          {selectedDate 
+          {selectedDate
             ? format(selectedDate, "MMMM d, yyyy")
             : `${events.length} Event${events.length === 1 ? "" : "s"}`
           }
@@ -59,8 +59,8 @@ export function EventList({ events, selectedDate, isLoading }: EventListProps) {
           {events.length} event{events.length === 1 ? "" : "s"} found
         </p>
       </div>
-      
-      <ScrollArea className="h-[400px] md:h-[500px]">
+
+      <ScrollArea className="flex-1">
         <div className="p-4 space-y-3">
           {events.map((event) => (
             <EventCard key={event.event_id} event={event} />
@@ -90,14 +90,14 @@ function EventCard({ event }: { event: NYCEvents }) {
       onClick={handleClick}
       className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-200 group cursor-pointer"
     >
-      <CardHeader className="p-4 pb-2">
+      <CardHeader className="p-4 pb-1">
         <div className="flex items-start justify-between gap-3">
           <h4 className="font-semibold text-slate-100 text-sm leading-tight group-hover:text-indigo-400 transition-colors">
             {event.event_name}
           </h4>
           {event.event_type && (
-            <Badge 
-              variant="outline" 
+            <Badge
+              variant="outline"
               className={`text-xs shrink-0 ${getEventTypeColor(event.event_type)}`}
             >
               {event.event_type}
@@ -105,8 +105,8 @@ function EventCard({ event }: { event: NYCEvents }) {
           )}
         </div>
       </CardHeader>
-      
-      <CardContent className="p-4 pt-0 space-y-2">
+
+      <CardContent className="p-4 pt-1 space-y-1.5">
         <div className="flex items-center gap-2 text-slate-400 text-xs">
           <Clock className="h-3.5 w-3.5 shrink-0" />
           <span>
